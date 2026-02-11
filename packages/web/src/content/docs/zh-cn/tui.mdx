@@ -5,9 +5,9 @@ description: 使用 opencode 终端用户界面。
 
 import { Tabs, TabItem } from "@astrojs/starlight/components"
 
-opencode 提供交互式终端介面或 TUI，以便使用 LLM 处理您的专案。
+opencode 提供交互式终端界面或 TUI，以便使用 LLM 处理您的项目。
 
-执行opencode启动当前目录的TUI。
+执行 opencode 启动当前目录的 TUI。
 
 ```bash
 opencode
@@ -19,7 +19,7 @@ opencode
 opencode /path/to/project
 ```
 
-进入TUI后，您可以查看消息进行提示。
+进入 TUI 后，您可以输入消息进行提问。
 
 ```text
 Give me a quick summary of the codebase.
@@ -27,31 +27,31 @@ Give me a quick summary of the codebase.
 
 ---
 
-## 文件參考
+## 文件引用
 
-您可以使用 `@` 在消息中引用文件。这会在当前工作目录中進行模糊文件搜索。
+您可以使用 `@` 在消息中引用文件。这会在当前工作目录中进行模糊文件搜索。
 
 :::tip
-您还可以使用 `@` 來引用消息中的文件。
+您还可以使用 `@` 来引用消息中的文件。
 :::
 
 ```text "@packages/functions/src/api/index.ts"
 How is auth handled in @packages/functions/src/api/index.ts?
 ```
 
-文件的內容会自动添加到对话中。
+文件的内容会自动添加到对话中。
 
 ---
 
 ## bash 命令
 
-以`!`开始一条消息以执行shell命令。
+以 `!` 开头的消息会执行 shell 命令。
 
 ```bash frame="none"
 !ls -la
 ```
 
-命令的輸出将作为工具結果添加到对话中。
+命令的输出将作为工具结果添加到对话中。
 
 ---
 
@@ -63,13 +63,13 @@ How is auth handled in @packages/functions/src/api/index.ts?
 /help
 ```
 
-大多数命令还是以使用 `ctrl+x` 作为主键的键系结，其中 `ctrl+x` 是默认主键。 [了解更多](/docs/keybinds)。
+大多数命令还有以 `ctrl+x` 为 leader 键的快捷键绑定，其中 `ctrl+x` 是默认主键。 [了解更多](/docs/keybinds)。
 
-以下是所有可用的斜槓命令：
+以下是所有可用的斜杠命令：
 
 ---
 
-### 连接
+### Connect
 
 将提供商添加到 opencode。你可以从可用提供商中选择，并添加它们的 API 密钥。
 
@@ -79,7 +79,7 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 紧凑
+### Compact
 
 压缩当前会话。_别名_： `/summarize`
 
@@ -91,9 +91,9 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 細節
+### Details
 
-切換工具执行详细信息。
+切换工具执行详细信息。
 
 ```bash frame="none"
 /details
@@ -103,9 +103,9 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 編輯
+### Editor
 
-开启外部编辑器来编写消息。使用`EDITOR`环境变量中设定的编辑器。 [了解更多](#editor-setup)。
+打开外部编辑器来编写消息。使用 `EDITOR` 环境变量中设置的编辑器。 [了解更多](#editor-setup)。
 
 ```bash frame="none"
 /editor
@@ -115,9 +115,9 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 出口
+### Exit
 
-退出opencode。 _别名_：`/quit`、`/q`
+退出 opencode。 _别名_：`/quit`、`/q`
 
 ```bash frame="none"
 /exit
@@ -127,9 +127,9 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 出口
+### Export
 
-将当前对话汇出到 Markdown 并在默认编辑器中开启。使用 `EDITOR` 环境变数中设定的编辑器。 [了解更多](#editor-setup)。
+将当前对话导出为 Markdown 并在默认编辑器中打开。使用 `EDITOR` 环境变量中设置的编辑器。 [了解更多](#editor-setup)。
 
 ```bash frame="none"
 /export
@@ -139,9 +139,9 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 幫助
+### Help
 
-显示幫助对话方塊。
+显示帮助对话框。
 
 ```bash frame="none"
 /help
@@ -151,7 +151,7 @@ How is auth handled in @packages/functions/src/api/index.ts?
 
 ---
 
-### 初始化
+### Init
 
 Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
@@ -163,7 +163,7 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 模型
+### Models
 
 列出可用模型。
 
@@ -175,7 +175,7 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 新的
+### New
 
 开始新的会话。 _别名_： `/clear`
 
@@ -187,16 +187,16 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 重做
+### Redo
 
-删除之前重做消除的讯息。仅在使用`/undo`后可用。
+恢复之前撤消的消息。仅在使用 `/undo` 后可用。
 
 :::tip
 任何文件更改也将被恢复。
 :::
 
-在内部，这使用 Git 来管理文件更改。所以你的专案**需要
-是一个Git存储库**。
+在内部，这使用 Git 来管理文件更改。所以你的项目**需要
+是一个 Git 存储库**。
 
 ```bash frame="none"
 /redo
@@ -206,9 +206,9 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 会话
+### Sessions
 
-上市会话并在会话之间切换。 _别名_：`/resume`、`/continue`
+列出会话并在会话之间切换。 _别名_：`/resume`、`/continue`
 
 ```bash frame="none"
 /sessions
@@ -218,7 +218,7 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 分享
+### Share
 
 共享当前会话。 [了解更多](/docs/share)。
 
@@ -230,7 +230,7 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 主题
+### Theme
 
 列出可用的主题。
 
@@ -242,12 +242,12 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 思維
+### Thinking
 
-切换对话中 thinking/reasoning 块的可视性。启用后，您可以看到支持增强套件思维的模型的推理过程。
+切换对话中 thinking/reasoning 块的可视性。启用后，您可以看到支持扩展思维的模型的推理过程。
 
 :::note
-该命令仅控制是否**显示** - 不启用或取消模型的推理功能。要切换实际推理功能，请使用 `ctrl+t` 回圈切换模型变体。
+该命令仅控制是否**显示** - 不启用或禁用模型的推理功能。要切换实际推理功能，请使用 `ctrl+t` 循环切换模型变体。
 :::
 
 ```bash frame="none"
@@ -256,16 +256,16 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 撤消
+### Undo
 
-撤消对话中的最后一条消息。删除最近的用户消息、所有后续響应以及任何文件更改。
+撤消对话中的最后一条消息。删除最近的用户消息、所有后续响应以及任何文件更改。
 
 :::tip
 所做的任何文件更改也将被恢复。
 :::
 
-在内部，这使用 Git 来管理文件更改。所以你的专案**需要
-是一个Git存储库**。
+在内部，这使用 Git 来管理文件更改。所以你的项目**需要
+是一个 Git 存储库**。
 
 ```bash frame="none"
 /undo
@@ -275,7 +275,7 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 
 ---
 
-### 取消共享
+### Unshare
 
 取消共享当前会话。 [了解更多](/docs/share#un-sharing)。
 
@@ -334,22 +334,22 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
   </TabItem>
 </Tabs>
 
-流行的编辑器選項包括：
+流行的编辑器选项包括：
 
 - `code` - Visual Studio Code
-- `cursor` - 游标
-- `windsurf` - 风帆冲浪
+- `cursor` - Cursor
+- `windsurf` - Windsurf
 - `nvim` - Neovim 编辑器
 - `vim` - Vim 编辑器
-- `nano` - 奈米编辑器
-- `notepad` - Windows 文章书
-- `subl` - 崇高文字
+- `nano` - Nano 编辑器
+- `notepad` - Windows 记事本
+- `subl` - Sublime Text
 
 :::note
 一些编辑器如 VS Code 需要以 `--wait` 标志启动。
 :::
 
-某些编辑器需要命令列参数才能在阻止模式下执行。 `--wait` 标志使编辑器程序阻塞直至关闭。
+某些编辑器需要命令行参数才能在阻止模式下执行。 `--wait` 标志使编辑器进程阻塞直到关闭。
 
 ---
 
@@ -369,22 +369,22 @@ Create or update `AGENTS.md` file. [Learn more](/docs/rules).
 }
 ```
 
-### 選項
+### 选项
 
-- `scroll_acceleration` - 启用 macOS 式滚动加速以实现平滑、自然的滚动。启用后，滚动速度会随着快速滚动滚动而增加，并在较慢的移动时保持精确。 **此设定优先于 `scroll_speed` 并在启用时覆盖它。 **
-- `scroll_speed` - 控制使用滚动控制器时 TUI 滚动的速度（简单：`1`）。默认为 `3`。 **注意：如果 `scroll_acceleration.enabled` 设置为 `true`，则忽略此设置。 **
-
----
-
-## 定製化
-
-您可以使用命令选项板（`ctrl+x h` 或 `/help`）自定义 TUI 查看的各个方面。这些设置在重新启动后仍然存在。
+- `scroll_acceleration` - 启用 macOS 式滚动加速以实现平滑、自然的滚动。启用后，滚动速度会随着快速滚动而增加，并在较慢的移动时保持精确。 **此设置优先于 `scroll_speed`，启用时会覆盖后者。**
+- `scroll_speed` - 控制使用鼠标滚轮时 TUI 滚动的速度（最小：`1`）。默认为 `3`。 **注意：如果 `scroll_acceleration.enabled` 设置为 `true`，则忽略此设置。**
 
 ---
 
-#### 用户名称显示
+## 定制化
 
-切換您的用户名称是否出現在聊天消息中。通过以下方式访问：
+您可以使用命令选项板（`ctrl+x h` 或 `/help`）自定义 TUI 显示的各个方面。这些设置在重新启动后仍然存在。
 
-- 命令面板：搜索“用户名称”或“隐藏用户名称”
-- 该设置会自动保留，放在 TUI 会话中被记住
+---
+
+#### 用户名显示
+
+切换您的用户名是否显示在聊天消息中。通过以下方式访问：
+
+- 命令面板：搜索“用户名”或“隐藏用户名”
+- 该设置会自动保存并在 TUI 会话中被记住

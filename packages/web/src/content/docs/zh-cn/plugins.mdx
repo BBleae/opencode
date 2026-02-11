@@ -11,18 +11,18 @@ description: 编写您自己的插件来扩展 opencode。
 
 ## 使用插件
 
-有两种加載插件的方法。
+有两种加载插件的方法。
 
 ---
 
-### 從本地文件
+### 从本地文件
 
 将 JavaScript 或 TypeScript 文件放置在插件目录中。
 
 - `.opencode/plugins/` - 项目级插件
 - `~/.config/opencode/plugins/` - 全局插件
 
-这些目录中的文件会在启动時自动加載。
+这些目录中的文件会在启动时自动加载。
 
 ---
 
@@ -51,27 +51,27 @@ description: 编写您自己的插件来扩展 opencode。
 
 ---
 
-### 加載顺序
+### 加载顺序
 
-插件從所有源加載，所有掛鉤按顺序運行。加載顺序为：
+插件从所有源加载，所有钩子按顺序运行。加载顺序为：
 
 1. 全局配置 (`~/.config/opencode/opencode.json`)
 2. 项目配置（`opencode.json`）
 3. 插件全局目录 (`~/.config/opencode/plugins/`)
 4. 项目插件目录(`.opencode/plugins/`)
 
-具有相同的名称和版本，但是重复的 npm 包将被加载一次。，本地插件和名称相似的 npm 插件都是分开加载的。
+具有相同名称和版本的重复 npm 包只会被加载一次。但本地插件和同名的 npm 插件会分别加载。
 
 ---
 
 ## 创建一个插件
 
-插件是一个 **JavaScript/TypeScript 模块多个**，它导出一个或插件
-功能。每个函數接收一个上下文对象并返回一个鉤子对象。
+插件是一个 **JavaScript/TypeScript 模块**，它导出一个或多个插件
+功能。每个函数接收一个上下文对象并返回一个钩子对象。
 
 ---
 
-### 依賴關係
+### 依赖关系
 
 本地插件和自定义工具可以使用外部 npm 包。将 `package.json` 添加到您的配置目录，其中包含您需要的依赖项。
 
@@ -101,7 +101,7 @@ export const MyPlugin = async (ctx) => {
 
 ---
 
-### 基本結構
+### 基本结构
 
 ```js title=".opencode/plugins/example.js"
 export const MyPlugin = async ({ project, client, $, directory, worktree }) => {
@@ -113,13 +113,13 @@ export const MyPlugin = async ({ project, client, $, directory, worktree }) => {
 }
 ```
 
-插件函數接收：
+插件函数接收：
 
 - `project`：当前项目信息。
 - `directory`：当前工作目录。
 - `worktree`：git 工作树路径。
-- `client`：用于与AI交互的opencodeSDK客户端。
-- `$`：Bun的[外壳API](https://bun.com/docs/runtime/shell)用于执行命令。
+- `client`：用于与 AI 交互的 opencode SDK 客户端。
+- `$`：Bun 的 [Shell API](https://bun.com/docs/runtime/shell) 用于执行命令。
 
 ---
 
@@ -139,9 +139,9 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 
 ---
 
-### 活动
+### 事件
 
-插件可以訂閱事件，如下面的示例部分所示。以下是可用的不同事件的列表。
+插件可以订阅事件，如下面的示例部分所示。以下是可用的不同事件的列表。
 
 #### 命令事件
 
@@ -152,11 +152,11 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 - `file.edited`
 - `file.watcher.updated`
 
-#### 安装活动
+#### 安装事件
 
 - `installation.updated`
 
-#### LSP活动
+#### LSP 事件
 
 - `lsp.client.diagnostics`
 - `lsp.updated`
@@ -173,11 +173,11 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 - `permission.asked`
 - `permission.replied`
 
-#### 服務器事件
+#### 服务器事件
 
 - `server.connected`
 
-#### 会话活动
+#### 会话事件
 
 - `session.created`
 - `session.compacted`
@@ -188,11 +188,11 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 - `session.status`
 - `session.updated`
 
-#### 都都活动
+#### Todo 事件
 
 - `todo.updated`
 
-#### 殼牌活动
+#### Shell 事件
 
 - `shell.env`
 
@@ -201,7 +201,7 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 - `tool.execute.after`
 - `tool.execute.before`
 
-#### TUI 活动
+#### TUI 事件
 
 - `tui.prompt.append`
 - `tui.command.execute`
@@ -215,9 +215,9 @@ export const MyPlugin: Plugin = async ({ project, client, $, directory, worktree
 
 ---
 
-### 發送通知
+### 发送通知
 
-当某些事件發生時發送通知：
+当某些事件发生时发送通知：
 
 ```js title=".opencode/plugins/notification.js"
 export const NotificationPlugin = async ({ project, client, $, directory, worktree }) => {
@@ -258,9 +258,9 @@ export const EnvProtection = async ({ project, client, $, directory, worktree })
 
 ---
 
-### 注入環境變量
+### 注入环境变量
 
-将环境变量注入所有shell执行（AI工具和用户终端）：
+将环境变量注入所有 shell 执行（AI 工具和用户终端）：
 
 ```javascript title=".opencode/plugins/inject-env.js"
 export const InjectEnvPlugin = async () => {
@@ -275,7 +275,7 @@ export const InjectEnvPlugin = async () => {
 
 ---
 
-### 定制工具
+### 自定义工具
 
 插件还可以向 opencode 添加自定义工具：
 
@@ -300,19 +300,19 @@ export const CustomToolsPlugin: Plugin = async (ctx) => {
 }
 ```
 
-`tool` 帮助器创建一个可以调用的自定义工具的opencode。它采用 Zod 模式函数并返回一个工具定义：
+`tool` 帮助器创建一个 opencode 可以调用的自定义工具。它采用 Zod schema 并返回一个工具定义：
 
 - `description`：该工具的作用
-- `args`：Zod 模式的工具参数
+- `args`：Zod schema 的工具参数
 - `execute`：调用工具时运行的函数
 
-您的自定義工具将可与内置工具一起用于opencode。
+您的自定义工具将可与内置工具一起用于 opencode。
 
 ---
 
-### 記錄
+### 日志
 
-使用 `client.app.log()` 而不是 `console.log` 进行成型日志记录：
+使用 `client.app.log()` 而不是 `console.log` 进行结构化日志记录：
 
 ```ts title=".opencode/plugins/my-plugin.ts"
 export const MyPlugin = async ({ client }) => {
@@ -327,13 +327,13 @@ export const MyPlugin = async ({ client }) => {
 }
 ```
 
-级别：`debug`、`info`、`warn`、`error`。详情请参见【SDK文档](https://opencode.ai/docs/sdk)。
+级别：`debug`、`info`、`warn`、`error`。详情请参见 [SDK 文档](https://opencode.ai/docs/sdk)。
 
 ---
 
-### 壓實鉤
+### 压缩钩子
 
-自定義壓縮会话時包含的上下文：
+自定义压缩会话时包含的上下文：
 
 ```ts title=".opencode/plugins/compaction.ts"
 import type { Plugin } from "@opencode-ai/plugin"
@@ -355,7 +355,7 @@ Include any state that should persist across compaction:
 }
 ```
 
-`experimental.session.compacting`钩子在LLM生成驱动机之前触发。使用它来填充默认压缩提示会丢失的特定于域的上下文。
+`experimental.session.compacting` 钩子在 LLM 生成摘要之前触发。使用它来注入默认压缩提示会遗漏的领域特定上下文。
 
 您还可以通过设置`output.prompt`来完全替换压缩提示：
 
@@ -382,4 +382,4 @@ Format as a structured prompt that a new agent can use to resume work.
 }
 ```
 
-当设置`output.prompt`时，它会取代完全默认的压缩提示。在这种情况下，`output.context` 内存将被忽略。
+当设置 `output.prompt` 时，它会完全取代默认的压缩提示。在这种情况下，`output.context` 数组将被忽略。
