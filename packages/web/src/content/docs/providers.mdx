@@ -817,6 +817,58 @@ subscription](https://github.com/features/copilot/plans) to use.
    /models
    ```
 
+#### How it works
+
+OpenCode uses the [OAuth Device Code flow](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#device-flow) to authenticate with GitHub Copilot. If you want to integrate GitHub Copilot into your own project, here's an overview of the flow.
+
+##### 1. Request a device code
+
+Send a `POST` request to `https://github.com/login/device/code` with a registered OAuth App `client_id` and the `read:user` scope. The response includes a `device_code`, `user_code`, and `verification_uri`.
+
+```bash frame="none"
+curl -X POST https://github.com/login/device/code \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"client_id":"YOUR_CLIENT_ID","scope":"read:user"}'
+```
+
+##### 2. User authorizes the app
+
+The user opens the `verification_uri` in a browser and enters the `user_code`.
+
+##### 3. Poll for an access token
+
+Poll `https://github.com/login/oauth/access_token` with the `device_code` and `grant_type` set to `urn:ietf:params:oauth:grant-type:device_code`. Continue polling while the response contains `"error":"authorization_pending"`, respecting the `interval` from step 1. Once the user authorizes, the response will contain an `access_token`.
+
+```bash frame="none"
+curl -X POST https://github.com/login/oauth/access_token \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"client_id":"YOUR_CLIENT_ID","device_code":"DEVICE_CODE","grant_type":"urn:ietf:params:oauth:grant-type:device_code"}'
+```
+
+##### 4. Call the Copilot API
+
+Use the `access_token` as a `Bearer` token to call the Copilot chat completions endpoint. The API is OpenAI-compatible so you can use any OpenAI SDK.
+
+```bash frame="none"
+curl https://api.githubcopilot.com/chat/completions \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Openai-Intent: conversation-edits" \
+  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+Key headers:
+- `Authorization` — `Bearer <access_token>` from step 3.
+- `Openai-Intent` — set to `conversation-edits`.
+- `Copilot-Vision-Request` — set to `true` when sending images.
+- `x-initiator` — `user` for user-initiated requests, `agent` for agent-initiated requests.
+
+:::tip
+For **GitHub Enterprise**, replace `github.com` with your enterprise domain in the OAuth URLs and use `https://copilot-api.<your-domain>` as the API base URL.
+:::
+
 ---
 
 ### Google Vertex AI
