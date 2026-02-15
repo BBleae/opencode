@@ -785,13 +785,13 @@ Customize through `opencode.json`:
 
 ### GitHub Copilot
 
-相当于您的 GitHub Copilot 订阅与 opencode 一起使用：
+将您的 GitHub Copilot 订阅与 OpenCode 一起使用：
 
 :::note
 某些模型可能需要 [Pro+
-订阅](https://github.com/features/copilot/plans)使用。
+订阅](https://github.com/features/copilot/plans)。
 
-Some models need to be manually enabled in your [GitHub Copilot settings](https://docs.github.com/en/copilot/how-tos/use-ai-models/configure-access-to-ai-models#setup-for-individual-use).
+部分模型需要在您的 [GitHub Copilot 设置](https://docs.github.com/en/copilot/how-tos/use-ai-models/configure-access-to-ai-models#setup-for-individual-use)中手动启用。
 :::
 
 1. 执行 `/connect` 命令并搜索 GitHub Copilot。
@@ -800,7 +800,7 @@ Some models need to be manually enabled in your [GitHub Copilot settings](https:
    /connect
    ```
 
-2. Navigate to [github.com/login/device](https://github.com/login/device) and enter the code.
+2. 打开 [github.com/login/device](https://github.com/login/device) 并输入代码。
 
    ```txt
    ┌ Login with GitHub Copilot
@@ -817,6 +817,58 @@ Some models need to be manually enabled in your [GitHub Copilot settings](https:
    ```txt
    /models
    ```
+
+#### 工作原理
+
+OpenCode 使用 [OAuth 设备代码流程](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#device-flow)对 GitHub Copilot 进行身份验证。如果您想在自己的项目中集成 GitHub Copilot，以下是整个流程的概述。
+
+##### 1. 请求设备代码
+
+向 `https://github.com/login/device/code` 发送 `POST` 请求，携带已注册的 OAuth App `client_id` 和 `read:user` 权限范围。响应中包含 `device_code`、`user_code` 和 `verification_uri`。
+
+```bash frame="none"
+curl -X POST https://github.com/login/device/code \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"client_id":"YOUR_CLIENT_ID","scope":"read:user"}'
+```
+
+##### 2. 用户授权应用
+
+用户在浏览器中打开 `verification_uri` 并输入 `user_code`。
+
+##### 3. 轮询获取访问令牌
+
+向 `https://github.com/login/oauth/access_token` 发送轮询请求，携带 `device_code` 并将 `grant_type` 设置为 `urn:ietf:params:oauth:grant-type:device_code`。当响应中包含 `"error":"authorization_pending"` 时继续轮询，并遵守步骤 1 中返回的 `interval`。用户授权后，响应中将包含 `access_token`。
+
+```bash frame="none"
+curl -X POST https://github.com/login/oauth/access_token \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"client_id":"YOUR_CLIENT_ID","device_code":"DEVICE_CODE","grant_type":"urn:ietf:params:oauth:grant-type:device_code"}'
+```
+
+##### 4. 调用 Copilot API
+
+使用 `access_token` 作为 `Bearer` 令牌调用 Copilot 聊天补全接口。该 API 兼容 OpenAI 格式，因此可以使用任何 OpenAI SDK。
+
+```bash frame="none"
+curl https://api.githubcopilot.com/chat/completions \
+  -H "Authorization: Bearer ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Openai-Intent: conversation-edits" \
+  -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+关键请求头：
+- `Authorization` — 来自步骤 3 的 `Bearer <access_token>`。
+- `Openai-Intent` — 设置为 `conversation-edits`。
+- `Copilot-Vision-Request` — 发送图片时设置为 `true`。
+- `x-initiator` — 用户发起的请求设置为 `user`，代理发起的请求设置为 `agent`。
+
+:::tip
+对于 **GitHub Enterprise**，将 OAuth URL 中的 `github.com` 替换为您的企业域名，并使用 `https://copilot-api.<your-domain>` 作为 API 基础 URL。
+:::
 
 ---
 
